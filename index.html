@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#1e40af" />
+    <meta name="description" content="EA PolicyFrame App - AI-powered policy framing tool using George Lakoff's cognitive framing methodology" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Preconnect to critical domains -->
+    <link rel="preconnect" href="https://ui-avatars.com" />
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/assets/index.css" as="style" />
+    <link rel="preload" href="/assets/index.js" as="script" />
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://ui-avatars.com" />
+    
+    <title>EA PolicyFrame App</title>
+    
+    <!-- Inline critical CSS for faster rendering -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+      
+      .initial-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .loader-card {
+        padding: 2rem;
+        text-align: center;
+        background-color: rgba(30, 58, 138, 0.3);
+        backdrop-filter: blur(20px);
+        border-radius: 1rem;
+      }
+      
+      .spinner {
+        width: 3rem;
+        height: 3rem;
+        border: 0.25rem solid rgba(255, 255, 255, 0.3);
+        border-top-color: rgba(59, 130, 246, 1);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+      
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Initial loader that shows before React loads -->
+      <div class="initial-loader">
+        <div class="loader-card">
+          <div class="spinner"></div>
+          <p>Loading EA PolicyFrame App...</p>
+        </div>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Register service worker for offline support -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
