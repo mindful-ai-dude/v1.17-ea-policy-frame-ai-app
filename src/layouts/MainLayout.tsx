@@ -71,7 +71,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <GlassNavigation
-        title="EA PolicyFrame"
+        title="PolicyFrame"
         items={navItems}
         rightContent={rightContent}
       />
@@ -85,7 +85,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       
       <footer className="glass-nav mt-auto py-4">
         <div className="container-responsive text-center text-white/60 text-sm">
-          &copy; {new Date().getFullYear()} EA PolicyFrame App • Powered by Convex
+          &copy; {new Date().getFullYear()} PolicyFrame • Powered by Convex
         </div>
       </footer>
     </div>

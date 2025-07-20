@@ -80,7 +80,7 @@ export function Landing({ onGenerate }: LandingProps) {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            EA PolicyFrame
+            PolicyFrame
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-4">
             Generate strategically framed AI policy content using cognitive framing techniques

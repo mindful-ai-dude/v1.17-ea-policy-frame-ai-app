@@ -46,7 +46,7 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center p-4">
       <GlassCard className="max-w-md w-full">
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-white">EA PolicyFrame</h1>
+          <h1 className="text-3xl font-bold text-white">PolicyFrame</h1>
           <p className="text-white/80 mt-2">Sign in to your account</p>
         </div>
         

@@ -1,12 +1,12 @@
-// Service Worker for EA PolicyFrame App
-const CACHE_NAME = 'ea-policyframe-cache-v1';
+// Service Worker for PolicyFrame App
+const CACHE_NAME = 'policyframe-cache-v1';
 
 // Assets to cache on install
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/vite.svg',
+  '/frame-favicon.svg',
   '/assets/index.css',
   '/assets/index.js',
 ];
@@ -116,8 +116,8 @@ self.addEventListener('push', (event) => {
   const data = event.data.json();
   const options = {
     body: data.body,
-    icon: '/vite.svg',
-    badge: '/vite.svg',
+    icon: '/frame-favicon.svg',
+    badge: '/frame-favicon.svg',
     data: {
       url: data.url || '/',
     },
@@ -177,7 +177,7 @@ async function syncContent() {
 // Helper function to open IndexedDB
 function openDatabase() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('ea-policyframe-sync', 1);
+    const request = indexedDB.open('policyframe-sync', 1);
     
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
