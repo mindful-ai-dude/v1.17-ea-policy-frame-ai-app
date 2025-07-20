@@ -1,6 +1,6 @@
-# EA PolicyFrame App Deployment Guide
+# PolicyFrame App Deployment Guide
 
-This document provides instructions for deploying the EA PolicyFrame App to production environments.
+This document provides instructions for deploying the PolicyFrame App to production environments.
 
 ## Prerequisites
 

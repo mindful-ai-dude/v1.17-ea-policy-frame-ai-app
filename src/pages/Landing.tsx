@@ -4,7 +4,7 @@ import GlassCard from '../components/GlassCard';
 import GlassButton from '../components/GlassButton';
 import GlassInput from '../components/GlassInput';
 import GlassNavigation from '../components/GlassNavigation';
-import { Region, ContentType } from '../types';
+import { type Region, type ContentType } from '../types';
 
 /**
  * Landing page component with input components
@@ -15,11 +15,11 @@ const Landing: React.FC = () => {
   const [url, setUrl] = useState('');
   const [region, setRegion] = useState<Region>('usa');
   const [contentType, setContentType] = useState<ContentType>('blog');
-  
+
   // Validation state
   const [topicError, setTopicError] = useState('');
   const [urlError, setUrlError] = useState('');
-  
+
   // Navigation items
   const navItems = [
     { label: 'Home', path: '/' },
@@ -27,7 +27,7 @@ const Landing: React.FC = () => {
     { label: 'Library', path: '/library' },
     { label: 'Settings', path: '/settings' },
   ];
-  
+
   // Content type options
   const contentTypes = [
     { id: 'blog', title: 'Short Daily Blog Post', description: '500-800 words with SEO optimization and call-to-action' },
@@ -35,31 +35,31 @@ const Landing: React.FC = () => {
     { id: 'playbook', title: 'Marketing Playbook', description: 'Comprehensive strategy with brand story and A/B testing frameworks' },
     { id: 'social', title: 'Social Media Calendar', description: 'One-month platform-specific content with hashtags and engagement optimization' },
   ];
-  
+
   // Handle topic input change
   const handleTopicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setTopic(value);
-    
+
     if (value.length < 3 && value.length > 0) {
       setTopicError('Topic must be at least 3 characters');
     } else {
       setTopicError('');
     }
   };
-  
+
   // Handle URL input change
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setUrl(value);
-    
+
     if (value && !isValidUrl(value)) {
       setUrlError('Please enter a valid URL');
     } else {
       setUrlError('');
     }
   };
-  
+
   // Validate URL format
   const isValidUrl = (url: string): boolean => {
     try {
@@ -69,35 +69,35 @@ const Landing: React.FC = () => {
       return false;
     }
   };
-  
+
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate inputs
     if (!topic) {
       setTopicError('Please enter a topic');
       return;
     }
-    
+
     if (url && !isValidUrl(url)) {
       setUrlError('Please enter a valid URL');
       return;
     }
-    
+
     // Form is valid, proceed to dashboard or content generation
     console.log('Form submitted:', { topic, url, region, contentType });
     // In a real app, we would redirect to the dashboard or content generation page
   };
-  
+
   return (
     <>
       <GlassNavigation
-        title="EA PolicyFrame"
+        title="PolicyFrame"
         items={navItems}
         rightContent={<Link to="/login"><GlassButton variant="outline">Sign In</GlassButton></Link>}
       />
-      
+
       <div className="container-responsive py-12 px-4">
         {/* Hero Section */}
         <section className="text-center mb-16">
@@ -105,18 +105,18 @@ const Landing: React.FC = () => {
             Frame Your AI Policy Content
           </h1>
           <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
-            Combine Effective Altruism principles with George Lakoff's cognitive framing 
+            Combine Effective Altruism principles with George Lakoff's cognitive framing
             to create persuasive AI policy content that advances safety and alignment.
           </p>
           <div className="flex justify-center">
             <GlassButton size="lg">Get Started</GlassButton>
           </div>
         </section>
-        
+
         {/* Content Generation Form */}
         <GlassCard className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-semibold text-white mb-6">Generate Content</h2>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Topic Input */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -128,7 +128,7 @@ const Landing: React.FC = () => {
                 error={topicError}
                 helperText="What would you like to write about?"
               />
-              
+
               <GlassInput
                 label="Reference URL (Optional)"
                 placeholder="https://example.com/article"
@@ -138,17 +138,16 @@ const Landing: React.FC = () => {
                 helperText="Add a URL for additional context"
               />
             </div>
-            
+
             {/* Region Selection */}
             <div>
               <label className="block text-white mb-2">Geographic Region</label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {(['usa', 'europe', 'australia', 'morocco'] as Region[]).map((r) => (
-                  <div 
+                  <div
                     key={r}
-                    className={`glass-card p-4 text-center cursor-pointer transition-all ${
-                      region === r ? 'bg-white/20 border-primary-300' : 'hover:bg-white/15'
-                    }`}
+                    className={`glass-card p-4 text-center cursor-pointer transition-all ${region === r ? 'bg-white/20 border-primary-300' : 'hover:bg-white/15'
+                      }`}
                     onClick={() => setRegion(r)}
                   >
                     <div className="font-medium text-white capitalize">{r}</div>
@@ -159,17 +158,16 @@ const Landing: React.FC = () => {
                 Select a region to apply specific policy context and cultural adaptation
               </p>
             </div>
-            
+
             {/* Content Type Selection */}
             <div>
               <label className="block text-white mb-2">Content Type</label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {contentTypes.map((type) => (
-                  <div 
+                  <div
                     key={type.id}
-                    className={`glass-card p-4 cursor-pointer transition-all ${
-                      contentType === type.id ? 'bg-white/20 border-primary-300' : 'hover:bg-white/15'
-                    }`}
+                    className={`glass-card p-4 cursor-pointer transition-all ${contentType === type.id ? 'bg-white/20 border-primary-300' : 'hover:bg-white/15'
+                      }`}
                     onClick={() => setContentType(type.id as ContentType)}
                   >
                     <h3 className="font-medium text-white">{type.title}</h3>
@@ -178,11 +176,11 @@ const Landing: React.FC = () => {
                 ))}
               </div>
             </div>
-            
+
             {/* Submit Button */}
             <div className="flex justify-end">
-              <GlassButton 
-                type="submit" 
+              <GlassButton
+                type="submit"
                 size="lg"
                 disabled={!topic || !!topicError || !!urlError}
               >
@@ -191,13 +189,13 @@ const Landing: React.FC = () => {
             </div>
           </form>
         </GlassCard>
-        
+
         {/* Features Section */}
         <section className="py-16">
           <h2 className="text-3xl font-bold text-white text-center mb-12">
             Powered by Cognitive Science
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <GlassCard>
               <div className="text-primary-300 mb-4">
@@ -210,7 +208,7 @@ const Landing: React.FC = () => {
                 Apply George Lakoff's cognitive framing principles to create persuasive content that avoids reinforcing opposition frames.
               </p>
             </GlassCard>
-            
+
             <GlassCard>
               <div className="text-primary-300 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -222,7 +220,7 @@ const Landing: React.FC = () => {
                 Adapt content to specific regional policy environments including USA, Europe, Australia, and Morocco.
               </p>
             </GlassCard>
-            
+
             <GlassCard>
               <div className="text-primary-300 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,12 +235,12 @@ const Landing: React.FC = () => {
           </div>
         </section>
       </div>
-      
+
       {/* Footer */}
       <footer className="glass-nav py-8">
         <div className="container-responsive text-center">
           <p className="text-white/60 mb-4">
-            &copy; {new Date().getFullYear()} EA PolicyFrame App • Powered by Convex
+            &copy; {new Date().getFullYear()} PolicyFrame App • Powered by Convex
           </p>
           <div className="flex justify-center space-x-6">
             <a href="#" className="text-white/60 hover:text-white">Terms</a>

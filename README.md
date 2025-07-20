@@ -1,4 +1,4 @@
-# 🌟 EA PolicyFrame: AI-Powered Policy Content Generation Platform
+# 🌟 PolicyFrame: AI-Powered Policy Content Generation Platform
 
 > **Transforming AI Policy Advocacy Through Cognitive Framing and Advanced AI**
 
@@ -228,6 +228,7 @@ pnpm run dev
 pnpm run dev:frontend  # React app on http://localhost:5173
 pnpm run dev:backend   # Express server on http://localhost:3001
 pnpm run dev:convex    # Convex development server
+npx convex dev --typecheck=disable # Convex development server
 ```
 
 ### **5. Get Google Gemini API Key**
@@ -480,4 +481,4 @@ PolicyFrame represents a new paradigm in AI policy advocacy - one that builds br
 
 **Version**: 1.0.0  
 **Last Updated**: January 2025  
-**Maintained by**: EA PolicyFrame Team
+**Maintained by**: PolicyFrame Team
