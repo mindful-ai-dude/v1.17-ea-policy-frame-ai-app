@@ -1,27 +1,31 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
-  // Users table
+  ...authTables,
+  
+  // Users table - modified to be more flexible for auth
   users: defineTable({
-    name: v.string(),
-    email: v.string(),
-    preferences: v.object({
+    name: v.optional(v.string()),
+    email: v.optional(v.string()),
+    isAnonymous: v.optional(v.boolean()),
+    preferences: v.optional(v.object({
       defaultModel: v.string(),
       defaultRegion: v.string(),
       defaultContentType: v.string(),
       theme: v.string(),
-    }),
+    })),
     apiKeys: v.optional(v.object({
       gemini: v.optional(v.string()),
     })),
-    usage: v.object({
+    usage: v.optional(v.object({
       totalGenerations: v.number(),
       totalTokens: v.number(),
       lastGeneration: v.string(), // ISO date string
-    }),
-    createdAt: v.string(), // ISO date string
-    updatedAt: v.string(), // ISO date string
+    })),
+    createdAt: v.optional(v.string()), // ISO date string
+    updatedAt: v.optional(v.string()), // ISO date string
   }).index("by_email", ["email"]),
 
   // Generated content table
@@ -75,4 +79,16 @@ export default defineSchema({
     createdAt: v.string(), // ISO date string
     updatedAt: v.string(), // ISO date string
   }).index("by_user", ["userId"]),
+
+  // API Keys table for secure storage
+  apiKeys: defineTable({
+    userId: v.id("users"),
+    provider: v.string(), // "google", "openai", etc.
+    encryptedKey: v.string(), // Encrypted API key
+    keyPreview: v.string(), // First 8 chars + "..." for display
+    createdAt: v.string(), // ISO date string
+    updatedAt: v.string(), // ISO date string
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_provider", ["userId", "provider"]),
 });

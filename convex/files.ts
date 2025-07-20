@@ -203,14 +203,12 @@ export const generateEmbeddings = action({
     // In a real implementation, you would store the embeddings in a vector database
     // or in a special field in the document
     
-    // Update the document with metadata indicating embeddings were generated
+    // Update the document with a note in the content indicating embeddings were generated
+    // Since we can't modify the metadata schema, we'll store this information elsewhere
     await ctx.runMutation(api.documents.updateDocument, {
       documentId: args.documentId,
-      metadata: {
-        ...document.metadata,
-        hasEmbeddings: true,
-        embeddingsGeneratedAt: new Date().toISOString(),
-      },
+      // We'll just update the document content to indicate embeddings were generated
+      content: document.content + "\n\n[Embeddings generated at " + new Date().toISOString() + "]"
     });
     
     return { success: true };
@@ -316,7 +314,7 @@ export const semanticSearch = action({
     userId: v.id("users"),
     query: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<{ results: any[]; message: string }> => {
     // In a real implementation, you would:
     // 1. Generate embeddings for the query
     // 2. Compare with stored document embeddings

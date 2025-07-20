@@ -1,205 +1,153 @@
-import { useEffect, lazy, Suspense, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ConvexProvider, ConvexReactClient } from 'convex/react';
-import { useAppStore } from './store/useAppStore';
-import './App.css';
+import { useState } from "react";
+import { Authenticated, Unauthenticated, useQuery } from "convex/react";
+import { api } from "../convex/_generated/api";
+import { SignInForm } from "./SignInForm";
+import { SignOutButton } from "./SignOutButton";
+import { Landing } from "./components/Landing";
+import { GenerationDashboard } from "./components/GenerationDashboard";
+import { OutputDisplay } from "./components/OutputDisplay";
+import { ContentLibrary } from "./components/ContentLibrary";
+import { Settings } from "./components/Settings";
+import { Navigation } from "./components/Navigation";
+import { ContentViewer } from "./components/ContentViewer";
+import { Toaster } from "sonner";
+import { useAuthActions } from "@convex-dev/auth/react";
 
-// Import performance monitoring
-import { startMeasurement, endMeasurement } from './utils/performanceMonitoring';
-import { setupLazyLoading, preloadCriticalImages } from './utils/imageOptimization';
+type AppScreen = 'landing' | 'generation' | 'output' | 'library' | 'settings' | 'viewContent';
 
-// Lazy load components for better performance
-const MainLayout = lazy(() => import('./layouts/MainLayout'));
-const ErrorBoundary = lazy(() => import('./components/ErrorBoundary'));
-const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
-const LoadingSpinner = lazy(() => import('./components/LoadingSpinner'));
-const GlassCard = lazy(() => import('./components/GlassCard'));
+interface GenerationRequest {
+  topic: string;
+  url?: string;
+  region: 'USA' | 'Europe' | 'Australia' | 'Morocco';
+  contentType: 'blog' | 'article' | 'playbook' | 'social';
+}
 
-// Lazy load all pages
-const Landing = lazy(() => import('./pages/Landing'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Settings = lazy(() => import('./pages/Settings'));
-const Library = lazy(() => import('./pages/Library'));
-const Login = lazy(() => import('./pages/Login'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-const GlassmorphicDemo = lazy(() => import('./pages/GlassmorphicDemo'));
-const GenerationDashboard = lazy(() => import('./pages/GenerationDashboard'));
-const OutputDisplay = lazy(() => import('./pages/OutputDisplay'));
-
-// Initialize Convex client
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
-
-// Loading fallback for lazy-loaded components
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-[60vh]">
-    <div className="glass-card p-8 text-center">
-      <div className="loading-spinner loading-lg"></div>
-      <p className="text-white mt-4">Loading page...</p>
-    </div>
-  </div>
-);
-
-// Lightweight initial loader (no dependencies)
-const InitialLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="p-8 text-center bg-blue-900/30 backdrop-blur-xl rounded-xl">
-      <div className="w-12 h-12 border-4 border-t-blue-400 border-blue-200/30 rounded-full animate-spin mx-auto"></div>
-      <p className="text-white mt-4">Loading EA PolicyFrame App...</p>
-    </div>
-  </div>
-);
-
-function App() {
-  const { checkAuth, isLoading } = useAppStore();
-  const [isAppReady, setIsAppReady] = useState(false);
+export default function App() {
+  const [currentScreen, setCurrentScreen] = useState<AppScreen>('landing');
+  const [generationRequest, setGenerationRequest] = useState<GenerationRequest | null>(null);
+  const [generatedContent, setGeneratedContent] = useState<string>('');
+  const [selectedModel, setSelectedModel] = useState<string>('gemini-2.5-pro');
+  const [selectedContentId, setSelectedContentId] = useState<string>('');
   
-  // Check authentication status on app load
-  useEffect(() => {
-    // Start measuring component mount time
-    startMeasurement('app-component-mount');
+  // Debug: Check authentication state
+  const user = useQuery(api.auth.loggedInUser);
+  console.log("Current user:", user);
+
+  const handleGenerate = (data: GenerationRequest) => {
+    setGenerationRequest(data);
+    setCurrentScreen('generation');
+  };
+
+  const handleGenerationComplete = (content: string, model: string) => {
+    setGeneratedContent(content);
+    setSelectedModel(model);
+    setCurrentScreen('output');
+  };
+
+  const handleBackToLanding = () => {
+    setCurrentScreen('landing');
+    setGenerationRequest(null);
+    setGeneratedContent('');
+    setSelectedContentId('');
+  };
+
+  const handleNavigate = (screen: 'landing' | 'library' | 'settings') => {
+    setCurrentScreen(screen);
+    setGenerationRequest(null);
+    setGeneratedContent('');
+    setSelectedContentId('');
+  };
+
+  const handleViewContent = (contentId: string) => {
+    setSelectedContentId(contentId);
+    setCurrentScreen('viewContent');
+  };
+
+  const renderAuthenticatedContent = () => {
+    console.log('Current screen:', currentScreen);
+    console.log('Rendering authenticated content...');
     
-    // Check authentication
-    checkAuth();
-    
-    // Setup lazy loading for images
-    setupLazyLoading();
-    
-    // Preload critical images
-    preloadCriticalImages([
-      // Add paths to critical images here
-      '/vite.svg',
-    ]);
-    
-    // Mark app as ready after a short delay to ensure smooth transitions
-    const readyTimer = setTimeout(() => {
-      setIsAppReady(true);
-      endMeasurement('app-component-mount', 'app-ready', 'app-ready-time');
-    }, 100);
-    
-    return () => clearTimeout(readyTimer);
-  }, [checkAuth]);
-  
-  // Show initial loading state
-  if (isLoading || !isAppReady) {
-    return <InitialLoader />;
-  }
-  
+    switch (currentScreen) {
+      case 'landing':
+        console.log('Rendering Landing component');
+        return <Landing onGenerate={handleGenerate} />;
+      case 'generation':
+        return generationRequest ? (
+          <GenerationDashboard
+            request={generationRequest}
+            onBack={handleBackToLanding}
+            onComplete={handleGenerationComplete}
+          />
+        ) : null;
+      case 'output':
+        return generationRequest ? (
+          <OutputDisplay
+            content={generatedContent}
+            request={generationRequest}
+            model={selectedModel}
+            onBack={() => setCurrentScreen('generation')}
+            onNewContent={handleBackToLanding}
+          />
+        ) : null;
+      case 'library':
+        return (
+          <ContentLibrary
+            onViewContent={handleViewContent}
+            onNewContent={handleBackToLanding}
+          />
+        );
+      case 'settings':
+        return <Settings onBack={() => setCurrentScreen('landing')} />;
+      case 'viewContent':
+        return selectedContentId ? (
+          <ContentViewer
+            contentId={selectedContentId}
+            onBack={() => setCurrentScreen('library')}
+            onEdit={(content, request, model) => {
+              setGeneratedContent(content);
+              setGenerationRequest(request);
+              setSelectedModel(model);
+              setCurrentScreen('output');
+            }}
+          />
+        ) : null;
+      default:
+        return <Landing onGenerate={handleGenerate} />;
+    }
+  };
+
   return (
-    <ConvexProvider client={convex}>
-      <Router>
-        <Suspense fallback={<PageLoader />}>
-          <ErrorBoundary>
-            <Routes>
-              {/* Public routes */}
-              <Route 
-                path="/" 
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <Landing />
-                  </Suspense>
-                } 
-              />
-              
-              <Route 
-                path="/login" 
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <Login />
-                  </Suspense>
-                } 
-              />
-              
-              <Route 
-                path="/demo" 
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <GlassmorphicDemo />
-                  </Suspense>
-                } 
-              />
-              
-              {/* Protected routes with MainLayout */}
-              <Route 
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <MainLayout />
-                  </Suspense>
-                }
-              >
-                <Route 
-                  path="/dashboard" 
-                  element={
-                    <ProtectedRoute>
-                      <Suspense fallback={<PageLoader />}>
-                        <Dashboard />
-                      </Suspense>
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path="/settings" 
-                  element={
-                    <ProtectedRoute>
-                      <Suspense fallback={<PageLoader />}>
-                        <Settings />
-                      </Suspense>
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path="/library" 
-                  element={
-                    <ProtectedRoute>
-                      <Suspense fallback={<PageLoader />}>
-                        <Library />
-                      </Suspense>
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path="/generate" 
-                  element={
-                    <ProtectedRoute>
-                      <Suspense fallback={<PageLoader />}>
-                        <GenerationDashboard />
-                      </Suspense>
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path="/output/:id" 
-                  element={
-                    <ProtectedRoute>
-                      <Suspense fallback={<PageLoader />}>
-                        <OutputDisplay />
-                      </Suspense>
-                    </ProtectedRoute>
-                  } 
-                />
-              </Route>
-              
-              {/* 404 route */}
-              <Route 
-                path="/404" 
-                element={
-                  <Suspense fallback={<PageLoader />}>
-                    <NotFound />
-                  </Suspense>
-                } 
-              />
-              
-              {/* Redirect all other routes to 404 */}
-              <Route path="*" element={<Navigate to="/404" replace />} />
-            </Routes>
-          </ErrorBoundary>
-        </Suspense>
-      </Router>
-    </ConvexProvider>
+    <div className="min-h-screen w-full">
+      <Authenticated>
+        {(currentScreen === 'landing' || currentScreen === 'library' || currentScreen === 'settings') && (
+          <Navigation currentScreen={currentScreen} onNavigate={handleNavigate} />
+        )}
+      </Authenticated>
+      
+      <main>
+        <Authenticated>
+          {renderAuthenticatedContent()}
+        </Authenticated>
+        <Unauthenticated>
+          <div className="flex flex-col gap-8 items-center justify-center">
+            <div className="text-center text-white">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                Welcome to PolicyFrame
+              </h1>
+              <p className="text-lg md:text-xl">
+                Sign in to start generating AI policy content.
+              </p>
+            </div>
+            <div className="w-full max-w-sm">
+              <div className="glass-card p-8">
+                <SignInForm />
+              </div>
+            </div>
+          </div>
+        </Unauthenticated>
+      </main>
+      <Toaster />
+    </div>
   );
 }
 
-export default App;

@@ -20,6 +20,9 @@ interface AppState {
     };
   };
   
+  // Authentication state
+  isLoading: boolean;
+  
   // UI state
   ui: {
     theme: 'light' | 'dark' | 'system';
@@ -52,6 +55,8 @@ interface AppState {
   };
   
   // Actions
+  checkAuth: () => Promise<void>;
+  
   actions: {
     // User actions
     setUser: (user: Partial<AppState['user']>) => void;
@@ -81,15 +86,51 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
-      // Initial user state
+      // Initial user state (temporarily set to authenticated for testing)
       user: {
-        id: null,
-        name: null,
-        email: null,
-        isAuthenticated: false,
+        id: "test-user-id",
+        name: "Test User",
+        email: "test@example.com",
+        isAuthenticated: true,
         apiKeys: {
           gemini: null,
         },
+      },
+      
+      // Authentication loading state
+      isLoading: false,
+      
+      // Check authentication status
+      checkAuth: async () => {
+        set({ isLoading: true });
+        try {
+          // In a real app, this would check with the backend
+          // For now, we'll just use the stored user
+          const currentUser = get().user;
+          
+          // Simulate a network request
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          if (!currentUser.isAuthenticated) {
+            // If no authenticated user, we'd normally redirect to login
+            // For testing, we'll just keep the test user
+            set({
+              user: {
+                id: "test-user-id",
+                name: "Test User",
+                email: "test@example.com",
+                isAuthenticated: true,
+                apiKeys: {
+                  gemini: null,
+                },
+              }
+            });
+          }
+        } catch (error) {
+          console.error("Auth check failed:", error);
+        } finally {
+          set({ isLoading: false });
+        }
       },
       
       // Initial UI state

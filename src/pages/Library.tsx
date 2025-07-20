@@ -45,8 +45,8 @@ const Library: React.FC = () => {
   const [showAnalytics, setShowAnalytics] = useState(false);
   
   const fileService = new FileReferenceService();  
-  /
-/ Fetch data on component mount
+  
+  // Fetch data on component mount
   useEffect(() => {
     if (activeTab === 'documents') {
       fetchDocuments();
@@ -121,8 +121,8 @@ const Library: React.FC = () => {
       fetchContentItems();
     }
   };
-  c
-onst calculateAnalytics = () => {
+  
+  const calculateAnalytics = () => {
     // Calculate content analytics
     const contentByType: Record<string, number> = {};
     const contentByRegion: Record<string, number> = {};
@@ -250,8 +250,9 @@ const handleExportContent = (content: GeneratedContent, format: 'pdf' | 'word' |
       // Alphabetical
       return a.topic.localeCompare(b.topic);
     }
-  });  // Re
-nder content item card
+  });  
+  
+  // Render content item card
   const renderContentItem = (item: GeneratedContent) => {
     const contentTypeLabels: Record<ContentType, string> = {
       blog: 'Blog Post',
