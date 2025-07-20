@@ -83,12 +83,9 @@ export function Landing({ onGenerate }: LandingProps) {
             EA PolicyFrame
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-4">
-            Generate strategically framed AI policy content using proven cognitive framing techniques
+            Generate strategically framed AI policy content using cognitive framing techniques
           </p>
-          <p className="text-lg text-white/80 max-w-3xl mx-auto">
-            Combining George Lakoff's framing principles with marketing expertise from Seth Godin, 
-            Gary Vaynerchuk, and Kieran Flanagan to create compelling policy advocacy materials.
-          </p>
+
         </div>
 
         {/* Topic Input Section */}
@@ -97,12 +94,12 @@ export function Landing({ onGenerate }: LandingProps) {
           
           <div className="space-y-4">
             <div>
-              <label className="block text-white/90 text-sm font-medium mb-2">
+              <label className="block text-gray-800 text-sm font-medium mb-2">
                 Topic or Subject
               </label>
               <GlassInput
                 type="text"
-                placeholder="e.g., AI safety regulations, algorithmic transparency, data privacy..."
+                placeholder="e.g., AI Risk, AI Research, Effective Altruism..."
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 className="w-full"
@@ -110,7 +107,7 @@ export function Landing({ onGenerate }: LandingProps) {
             </div>
             
             <div>
-              <label className="block text-white/90 text-sm font-medium mb-2">
+              <label className="block text-gray-800 text-sm font-medium mb-2">
                 Reference URL (Optional)
               </label>
               <GlassInput
@@ -120,7 +117,7 @@ export function Landing({ onGenerate }: LandingProps) {
                 onChange={(e) => setUrl(e.target.value)}
                 className="w-full"
               />
-              <p className="text-white/70 text-sm mt-1">
+              <p className="text-gray-700 text-sm mt-1">
                 Provide a URL to reference specific content or research
               </p>
             </div>
@@ -144,7 +141,7 @@ export function Landing({ onGenerate }: LandingProps) {
               >
                 <div className="text-3xl mb-2">{region.flag}</div>
                 <div className="text-white font-semibold mb-1">{region.name}</div>
-                <div className="text-white/80 text-sm">{region.description}</div>
+                <div className="text-gray-700 text-sm">{region.description}</div>
               </button>
             ))}
           </div>
@@ -169,12 +166,12 @@ export function Landing({ onGenerate }: LandingProps) {
                   <div className="text-4xl">{type.icon}</div>
                   <div className="flex-1">
                     <h3 className="text-white font-bold text-lg mb-2">{type.title}</h3>
-                    <p className="text-white/80 text-sm mb-3">{type.description}</p>
+                    <p className="text-gray-700 text-sm mb-3">{type.description}</p>
                     <div className="flex flex-wrap gap-2">
                       {type.features.map((feature) => (
                         <span
                           key={feature}
-                          className="px-2 py-1 bg-white/20 rounded-lg text-white/90 text-xs"
+                          className="px-2 py-1 bg-white/20 rounded-lg text-gray-800 text-xs"
                         >
                           {feature}
                         </span>
@@ -202,7 +199,7 @@ export function Landing({ onGenerate }: LandingProps) {
           </GlassButton>
           
           {!isFormValid && (
-            <p className="text-white/70 text-sm mt-2">
+            <p className="text-gray-700 text-sm mt-2">
               Please enter a topic and select a content type to continue
             </p>
           )}

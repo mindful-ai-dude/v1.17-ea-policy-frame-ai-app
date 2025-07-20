@@ -105,7 +105,7 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Content Library</h1>
-            <p className="text-white/80">
+            <p className="text-gray-700">
               Manage and organize your generated policy content
             </p>
           </div>
@@ -122,19 +122,19 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
           <GlassCard>
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-2">{stats.total}</div>
-              <div className="text-white/80">Total Documents</div>
+              <div className="text-gray-700">Total Documents</div>
             </div>
           </GlassCard>
           <GlassCard>
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-2">{stats.totalWords.toLocaleString()}</div>
-              <div className="text-white/80">Total Words</div>
+              <div className="text-gray-700">Total Words</div>
             </div>
           </GlassCard>
           <GlassCard>
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-2">{stats.avgReadingTime}</div>
-              <div className="text-white/80">Avg. Reading Time (min)</div>
+              <div className="text-gray-700">Avg. Reading Time (min)</div>
             </div>
           </GlassCard>
         </div>
@@ -199,7 +199,7 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
 
           {/* View Mode Toggle */}
           <div className="flex justify-between items-center mt-4 pt-4 border-t border-white/20">
-            <div className="text-white/80 text-sm">
+            <div className="text-gray-700 text-sm">
               {sortedContent.length} {sortedContent.length === 1 ? 'document' : 'documents'} found
             </div>
             <div className="flex space-x-2">
@@ -233,7 +233,7 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
             <div className="text-center py-12">
               <div className="text-6xl mb-4">📝</div>
               <h3 className="text-xl font-semibold text-white mb-2">No content found</h3>
-              <p className="text-white/70 mb-6">
+              <p className="text-gray-700 mb-6">
                 {searchQuery || selectedType || selectedRegion 
                   ? 'Try adjusting your search filters'
                   : 'Start by creating your first piece of content'
@@ -260,10 +260,10 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="px-2 py-1 bg-blue-500/30 rounded text-white/90 text-xs">
+                          <span className="px-2 py-1 bg-blue-500/30 rounded text-gray-800 text-xs">
                             {contentTypeLabels[item.type as keyof typeof contentTypeLabels]}
                           </span>
-                          <span className="px-2 py-1 bg-purple-500/30 rounded text-white/90 text-xs">
+                          <span className="px-2 py-1 bg-purple-500/30 rounded text-gray-800 text-xs">
                             {regionLabels[item.region as keyof typeof regionLabels]}
                           </span>
                         </div>
@@ -280,30 +280,30 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
                       </button>
                     </div>
 
-                    <p className="text-white/70 text-sm line-clamp-3">
+                    <p className="text-gray-700 text-sm line-clamp-3">
                       {item.content}
                     </p>
 
-                    <div className="flex justify-between text-xs text-white/60">
+                    <div className="flex justify-between text-xs text-gray-700">
                       <span>{item.metadata.wordCount} words</span>
                       <span>{item.metadata.readingTime} min read</span>
                     </div>
 
                     <div className="flex flex-wrap gap-1 mb-4">
                       {item.metadata.framesUsed.slice(0, 3).map((frame, index) => (
-                        <span key={index} className="px-2 py-1 bg-green-500/20 rounded text-white/80 text-xs">
+                        <span key={index} className="px-2 py-1 bg-green-500/20 rounded text-gray-800 text-xs">
                           {frame}
                         </span>
                       ))}
                       {item.metadata.framesUsed.length > 3 && (
-                        <span className="px-2 py-1 bg-gray-500/20 rounded text-white/60 text-xs">
+                        <span className="px-2 py-1 bg-gray-500/20 rounded text-gray-700 text-xs">
                           +{item.metadata.framesUsed.length - 3} more
                         </span>
                       )}
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-white/60 text-xs">
+                      <span className="text-gray-700 text-xs">
                         {new Date(item.createdAt).toLocaleDateString()}
                       </span>
                       <GlassButton
@@ -320,10 +320,10 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
                         <div className="flex space-x-2">
-                          <span className="px-2 py-1 bg-blue-500/30 rounded text-white/90 text-xs">
+                          <span className="px-2 py-1 bg-blue-500/30 rounded text-gray-800 text-xs">
                             {contentTypeLabels[item.type as keyof typeof contentTypeLabels]}
                           </span>
-                          <span className="px-2 py-1 bg-purple-500/30 rounded text-white/90 text-xs">
+                          <span className="px-2 py-1 bg-purple-500/30 rounded text-gray-800 text-xs">
                             {regionLabels[item.region as keyof typeof regionLabels]}
                           </span>
                         </div>
@@ -331,7 +331,7 @@ export function ContentLibrary({ onViewContent, onNewContent }: ContentLibraryPr
                           {item.topic}
                         </h3>
                       </div>
-                      <div className="flex items-center space-x-4 mt-2 text-sm text-white/60">
+                      <div className="flex items-center space-x-4 mt-2 text-sm text-gray-700">
                         <span>{item.metadata.wordCount} words</span>
                         <span>{item.metadata.readingTime} min read</span>
                         <span>{new Date(item.createdAt).toLocaleDateString()}</span>

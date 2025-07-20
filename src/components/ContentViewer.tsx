@@ -22,7 +22,7 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
             <div className="text-center py-12">
               <div className="text-4xl mb-4">📄</div>
               <h3 className="text-xl font-semibold text-white mb-2">Content not found</h3>
-              <p className="text-white/70 mb-6">
+              <p className="text-gray-700 mb-6">
                 The content you're looking for doesn't exist or has been deleted.
               </p>
               <GlassButton onClick={onBack} className="bg-blue-600/80 hover:bg-blue-700/80">
@@ -65,7 +65,7 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{content.topic}</h1>
-            <p className="text-white/80">
+            <p className="text-gray-700">
               {contentTypeLabels[content.type as keyof typeof contentTypeLabels]} • {regionLabels[content.region as keyof typeof regionLabels]}
             </p>
           </div>
@@ -83,8 +83,8 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
           {/* Content Display */}
           <div className="lg:col-span-3">
             <GlassCard>
-              <div className="bg-white/5 rounded-xl p-6 max-h-[600px] overflow-y-auto">
-                <pre className="text-white/90 whitespace-pre-wrap font-sans leading-relaxed">
+              <div className="bg-white/90 rounded-xl p-6 max-h-[600px] overflow-y-auto">
+                <pre className="text-gray-800 whitespace-pre-wrap font-sans leading-relaxed">
                   {content.content}
                 </pre>
               </div>
@@ -98,25 +98,25 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
               <h3 className="text-lg font-semibold text-white mb-4">Content Details</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-white/70">Words:</span>
-                  <span className="text-white font-medium">{content.metadata.wordCount}</span>
+                  <span className="text-gray-700">Words:</span>
+                  <span className="text-gray-800 font-medium">{content.metadata.wordCount}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/70">Reading Time:</span>
-                  <span className="text-white font-medium">{content.metadata.readingTime} min</span>
+                  <span className="text-gray-700">Reading Time:</span>
+                  <span className="text-gray-800 font-medium">{content.metadata.readingTime} min</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/70">Model:</span>
-                  <span className="text-white font-medium text-sm">{content.model}</span>
+                  <span className="text-gray-700">Model:</span>
+                  <span className="text-gray-800 font-medium text-sm">{content.model}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/70">Created:</span>
-                  <span className="text-white font-medium text-sm">{new Date(content.createdAt).toLocaleDateString()}</span>
+                  <span className="text-gray-700">Created:</span>
+                  <span className="text-gray-800 font-medium text-sm">{new Date(content.createdAt).toLocaleDateString()}</span>
                 </div>
                 {content.updatedAt !== content.createdAt && (
                   <div className="flex justify-between">
-                    <span className="text-white/70">Updated:</span>
-                    <span className="text-white font-medium text-sm">{new Date(content.updatedAt).toLocaleDateString()}</span>
+                    <span className="text-gray-700">Updated:</span>
+                    <span className="text-gray-800 font-medium text-sm">{new Date(content.updatedAt).toLocaleDateString()}</span>
                   </div>
                 )}
               </div>
@@ -127,20 +127,20 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
               <h3 className="text-lg font-semibold text-white mb-4">Lakoff Analysis</h3>
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-white/90 text-sm font-medium mb-2">Frames Used:</h4>
+                  <h4 className="text-gray-800 text-sm font-medium mb-2">Frames Used:</h4>
                   <div className="flex flex-wrap gap-1">
                     {content.metadata.framesUsed.map((frame, index) => (
-                      <span key={index} className="px-2 py-1 bg-blue-500/30 rounded text-white/80 text-xs">
+                      <span key={index} className="px-2 py-1 bg-blue-500/30 rounded text-gray-800 text-xs">
                         {frame}
                       </span>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-white/90 text-sm font-medium mb-2">Metaphors:</h4>
+                  <h4 className="text-gray-800 text-sm font-medium mb-2">Metaphors:</h4>
                   <div className="flex flex-wrap gap-1">
                     {content.metadata.metaphorsUsed.map((metaphor, index) => (
-                      <span key={index} className="px-2 py-1 bg-purple-500/30 rounded text-white/80 text-xs">
+                      <span key={index} className="px-2 py-1 bg-purple-500/30 rounded text-gray-800 text-xs">
                         {metaphor}
                       </span>
                     ))}
@@ -155,15 +155,15 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
                 <h3 className="text-lg font-semibold text-white mb-4">Citations</h3>
                 <div className="space-y-2">
                   {content.citations.map((citation, index) => (
-                    <div key={index} className="bg-white/5 rounded-lg p-3">
-                      <div className="text-white/90 text-sm font-medium">{citation.title}</div>
-                      <div className="text-white/70 text-xs">{citation.source}</div>
+                    <div key={index} className="bg-white/80 rounded-lg p-3">
+                      <div className="text-gray-800 text-sm font-medium">{citation.title}</div>
+                      <div className="text-gray-700 text-xs">{citation.source}</div>
                       {citation.url && (
                         <a 
                           href={citation.url} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-blue-300 hover:text-blue-200 text-xs underline"
+                          className="text-blue-600 hover:text-blue-800 text-xs underline"
                         >
                           View Source
                         </a>
