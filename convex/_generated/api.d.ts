@@ -16,6 +16,7 @@ import type * as emails from "../emails.js";
 import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as router from "../router.js";
+import type * as search from "../search.js";
 import type * as users from "../users.js";
 
 import type {
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   files: typeof files;
   http: typeof http;
   router: typeof router;
+  search: typeof search;
   users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

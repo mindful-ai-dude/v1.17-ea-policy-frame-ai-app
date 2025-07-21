@@ -11,6 +11,7 @@ export interface GenerationRequest {
   contentType: ContentType;
   model: GeminiModel;
   apiKey: string;
+  searchResults?: { title: string; link: string; content: string; score: number }[];
 }
 
 export interface GenerationProgress {
@@ -243,6 +244,17 @@ SOCIAL MEDIA CALENDAR STRUCTURE (One Month):
   ): string {
     const urlContext = request.url ? `\nREFERENCE URL: ${request.url}\nPlease analyze and reference relevant information from this source.` : '';
 
+    let searchContext = '';
+    if (request.searchResults && request.searchResults.length > 0) {
+      searchContext = "\n\n### Up-to-date Information from Web Search\n" +
+                      "Use the following real-time search results to provide current and accurate information for the year 2025. Prioritize these sources for any facts, figures, or recent events. Synthesize the information from these sources in your response.\n";
+      request.searchResults.forEach((result, index) => {
+        searchContext += `\n[Source ${index + 1}: ${result.title}]\n` +
+                         `Link: ${result.link}\n` +
+                         `Content: ${result.content}\n`;
+      });
+    }
+
     return `You are an expert policy communication strategist specializing in George Lakoff's cognitive framing methodology. Create compelling, strategically framed content that advances AI policy advocacy.
 
 ${framingContext}
@@ -250,21 +262,21 @@ ${framingContext}
 ${regionalContext}
 
 ${contentStructure}
-
+${searchContext}
 CONTENT REQUEST:
 Topic: ${request.topic}
 Content Type: ${this.getContentTypeLabel(request.contentType)}
 Target Region: ${request.region}${urlContext}
 
 INSTRUCTIONS:
-1. Apply Lakoff framing principles throughout - use positive, value-based language
-2. Incorporate regional policy context and cultural considerations
-3. Follow the specified content structure and word count
-4. Include specific, actionable recommendations
-5. Use compelling storytelling and narrative techniques
-6. Ensure content is accessible to both experts and general audiences
-7. Include relevant citations and evidence where appropriate
-8. End with a clear, inspiring call-to-action
+1.  **Ground your response in the provided web search results.** All facts, statistics, and recent events must be based on the sources provided.
+2.  Apply Lakoff framing principles throughout - use positive, value-based language.
+3.  Incorporate regional policy context and cultural considerations.
+4.  Follow the specified content structure and word count.
+5.  Include specific, actionable recommendations.
+6.  Use compelling storytelling and narrative techniques.
+7.  Ensure content is accessible to both experts and general audiences.
+8.  **Create accurate citations in your response based *only* on the provided search result sources.**
 
 Generate the content now:`;
   }

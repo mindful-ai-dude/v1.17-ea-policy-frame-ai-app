@@ -2,14 +2,46 @@
   "mcpServers": {
     "fetch": {
       "command": "uvx",
-      "args": ["mcp-server-fetch"],
+      "args": [
+        "mcp-server-fetch"
+      ],
       "env": {},
       "disabled": true,
       "autoApprove": []
     },
     "convex": {
       "command": "npx",
-      "args": ["-y", "convex@latest", "mcp", "start"],
+      "args": [
+        "-y",
+        "convex@latest",
+        "mcp",
+        "start"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    },
+    "tavily-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "tavily-mcp@latest"
+      ],
+      "env": {
+        "TAVILY_API_KEY": "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"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "neo4J": {
+      "command": "uvx",
+      "args": [
+        "mcp-neo4j-cypher",
+        "--db-url",
+        "neo4j+s://8c0b920b.databases.neo4j.io",
+        "--password",
+        "MtxaZ-xJoq6qnhTh3D5vT2FHbLTyFqU4eDxg9YFAaVg"
+      ],
       "env": {},
       "disabled": false,
       "autoApprove": []

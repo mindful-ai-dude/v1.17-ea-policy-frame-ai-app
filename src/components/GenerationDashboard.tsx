@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useQuery } from 'convex/react';
+import { useQuery, useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { GlassCard } from './ui/GlassCard';
 import { GlassButton } from './ui/GlassButton';
@@ -45,6 +45,7 @@ export function GenerationDashboard({ request, onBack, onComplete }: GenerationD
   const [contentEngine] = useState(() => new ContentGenerationEngine());
 
   const apiKeyData = useQuery(api.apiKeys.getDecryptedApiKey, { provider: 'google' });
+  const performTavilySearch = useAction(api.search.performTavilySearch);
 
   const models: ModelInfo[] = [
     {
@@ -118,11 +119,17 @@ export function GenerationDashboard({ request, onBack, onComplete }: GenerationD
         return;
       }
 
+      // ** NEW STEP: Perform Tavily web search **
+      setCurrentStep('Searching for current information...');
+      setProgress(15);
+      const searchResults = await performTavilySearch({ query: request.topic });
+
       // Generate content using the real AI service
       const generationRequest = {
         ...request,
         model: selectedModel,
         apiKey: decryptedApiKey,
+        searchResults: searchResults, // Pass the results
       };
 
       let finalContent = '';
