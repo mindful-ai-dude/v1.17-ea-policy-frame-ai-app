@@ -21,12 +21,13 @@ A sophisticated web application that combines **Effective Altruism principles** 
 - **File Storage**: Efficient document and media handling
 - **Type Safety**: Full TypeScript integration throughout the stack
 
-### 📧 **Resend Integration Ready**
-- **Email Notifications**: Content generation completion alerts
-- **Sharing Features**: Send generated content via professional emails
-- **User Onboarding**: Welcome sequences and feature introductions
-- **Analytics Reports**: Weekly/monthly usage summaries
-- **Collaboration**: Share content with team members and stakeholders
+### 📧 **Resend Integration Excellence**
+- **Real-time Email Notifications**: Instant alerts when content generation completes
+- **Professional Content Sharing**: Send generated content via beautifully designed emails
+- **Welcome Email Sequences**: Automated onboarding for new users with setup guides
+- **Email Event Tracking**: Full webhook integration with delivery, bounce, and complaint handling
+- **Secure Email Management**: Encrypted API keys and webhook secret handling
+- **User Email Preferences**: Granular control over notification settings
 
 ### 💡 **Innovation Highlights**
 - **Cognitive Framing AI**: First-of-its-kind Lakoff methodology integration
@@ -171,7 +172,7 @@ PolicyFrame empowers the AI safety and policy community to create more effective
 - **Regional Context Service** for policy adaptation
 - **Content Generation Pipeline** with streaming responses
 
-### **Convex Integration Highlights**
+### **Convex + Resend Integration Highlights**
 - **Real-time Mutations**: Instant content updates across all connected clients
 - **Reactive Queries**: Automatic UI updates when data changes
 - **Serverless Functions**: Scalable AI processing without server management
@@ -179,6 +180,9 @@ PolicyFrame empowers the AI safety and policy community to create more effective
 - **Type-safe Database**: Full TypeScript support from database to frontend
 - **File Storage**: Seamless document upload and management
 - **Edge Functions**: Global content delivery for optimal performance
+- **Email Automation**: Scheduled email notifications using Convex actions
+- **Webhook Handling**: Secure Resend webhook processing via HTTP actions
+- **Event-Driven Architecture**: Email events trigger database updates and user notifications
 
 ### **Database Schema (Convex)**
 

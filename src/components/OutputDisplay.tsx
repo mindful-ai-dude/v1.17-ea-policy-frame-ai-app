@@ -3,6 +3,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { GlassCard } from './ui/GlassCard';
 import { GlassButton } from './ui/GlassButton';
+import { ContentShare } from './ContentShare';
 import { toast } from 'sonner';
 
 interface OutputDisplayProps {
@@ -23,6 +24,8 @@ export function OutputDisplay({ content, request, model, onBack, onNewContent }:
   const [editedContent, setEditedContent] = useState(content);
   const [isSaving, setIsSaving] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [savedContentId, setSavedContentId] = useState<string | null>(null);
 
   const saveContent = useMutation(api.content.saveGeneratedContent);
 
@@ -43,7 +46,7 @@ export function OutputDisplay({ content, request, model, onBack, onNewContent }:
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await saveContent({
+      const contentId = await saveContent({
         type: request.contentType,
         topic: request.topic,
         region: request.region,
@@ -59,6 +62,7 @@ export function OutputDisplay({ content, request, model, onBack, onNewContent }:
         referenceUrl: request.url,
       });
       
+      setSavedContentId(contentId);
       toast.success('Content saved to your library');
       setIsEditing(false);
     } catch (error) {
@@ -183,7 +187,7 @@ ${content}`;
 
   const extractFrames = (content: string): string[] => {
     // Simple frame extraction - in production, use more sophisticated NLP
-    const frames = [];
+    const frames: string[] = [];
     if (content.includes('opportunity')) frames.push('Opportunity Frame');
     if (content.includes('safety') || content.includes('secure')) frames.push('Safety Frame');
     if (content.includes('innovation')) frames.push('Innovation Frame');
@@ -194,7 +198,7 @@ ${content}`;
 
   const extractMetaphors = (content: string): string[] => {
     // Simple metaphor extraction
-    const metaphors = [];
+    const metaphors: string[] = [];
     if (content.includes('bridge') || content.includes('pathway')) metaphors.push('Bridge/Pathway');
     if (content.includes('foundation') || content.includes('building')) metaphors.push('Building/Foundation');
     if (content.includes('journey') || content.includes('roadmap')) metaphors.push('Journey/Navigation');
@@ -204,7 +208,12 @@ ${content}`;
 
   const extractCitations = (content: string) => {
     // Simple citation extraction - in production, use more sophisticated parsing
-    const citations = [];
+    const citations: Array<{
+      source: string;
+      title: string;
+      url: string;
+      accessDate: string;
+    }> = [];
     const urlRegex = /https?:\/\/[^\s]+/g;
     const urls = content.match(urlRegex) || [];
     
@@ -393,8 +402,11 @@ ${content}`;
                 </GlassButton>
                 <GlassButton
                   onClick={() => {
-                    const shareUrl = `mailto:?subject=${encodeURIComponent(request.topic)}&body=${encodeURIComponent(editedContent)}`;
-                    window.open(shareUrl);
+                    if (savedContentId) {
+                      setShowShareModal(true);
+                    } else {
+                      toast.info('Please save the content first to share it');
+                    }
                   }}
                   className="w-full bg-green-600/80 hover:bg-green-700/80 text-sm"
                 >
@@ -405,6 +417,15 @@ ${content}`;
           </div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && savedContentId && (
+        <ContentShare
+          contentId={savedContentId}
+          contentTitle={request.topic}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { convexAuth, getAuthUserId } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { Anonymous } from "@convex-dev/auth/providers/Anonymous";
 import { query, mutation } from "./_generated/server";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [Password, Anonymous],
@@ -28,6 +28,14 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       createdAt: now,
       updatedAt: now,
     });
+    
+    // Send welcome email for non-anonymous users
+    if (user.provider !== "anonymous" && user.email) {
+      ctx.scheduler.runAfter(0, internal.emails.sendWelcomeEmail, {
+        userEmail: user.email,
+        userName: user.name || "PolicyFrame User",
+      });
+    }
     
     return userId;
   },

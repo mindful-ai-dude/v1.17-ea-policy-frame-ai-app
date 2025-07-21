@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { GlassCard } from './ui/GlassCard';
 import { GlassButton } from './ui/GlassButton';
+import { ContentShare } from './ContentShare';
 
 interface ContentViewerProps {
   contentId: string;
@@ -10,6 +12,8 @@ interface ContentViewerProps {
 }
 
 export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps) {
+  const [showShareModal, setShowShareModal] = useState(false);
+  
   const content = useQuery(api.content.getContentById, { 
     contentId: contentId as any
   });
@@ -72,6 +76,9 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
           <div className="flex space-x-3">
             <GlassButton onClick={onBack} className="bg-white/20 hover:bg-white/30">
               ← Back to Library
+            </GlassButton>
+            <GlassButton onClick={() => setShowShareModal(true)} className="bg-green-600/80 hover:bg-green-700/80">
+              📧 Share
             </GlassButton>
             <GlassButton onClick={handleEdit} className="bg-blue-600/80 hover:bg-blue-700/80">
               ✏️ Edit
@@ -176,6 +183,15 @@ export function ContentViewer({ contentId, onBack, onEdit }: ContentViewerProps)
           </div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <ContentShare
+          contentId={contentId}
+          contentTitle={content.topic}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </div>
   );
 }

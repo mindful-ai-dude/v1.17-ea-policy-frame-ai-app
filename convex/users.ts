@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 
 // Create or update a user with default values
 export const createOrUpdateUser = mutation({
@@ -29,7 +30,7 @@ export const createOrUpdateUser = mutation({
     }
     
     // Create new user with default values
-    return await ctx.db.patch(userId, {
+    const result = await ctx.db.patch(userId, {
       name: name || "User",
       email: email || "",
       isAnonymous: isAnonymous || false,
@@ -47,6 +48,16 @@ export const createOrUpdateUser = mutation({
       createdAt: now,
       updatedAt: now,
     });
+
+    // Send welcome email for new non-anonymous users
+    if (email && !isAnonymous) {
+      ctx.scheduler.runAfter(0, internal.emails.sendWelcomeEmail, {
+        userEmail: email,
+        userName: name || "PolicyFrame User",
+      });
+    }
+
+    return result;
   },
 });
 

@@ -5,6 +5,7 @@ import { GlassCard } from './ui/GlassCard';
 import { GlassButton } from './ui/GlassButton';
 import { GlassInput } from './ui/GlassInput';
 import { ApiKeyManager } from './ApiKeyManager';
+import { EmailSettings } from './EmailSettings';
 import { toast } from 'sonner';
 
 interface SettingsProps {
@@ -12,7 +13,7 @@ interface SettingsProps {
 }
 
 export function Settings({ onBack }: SettingsProps) {
-  const [activeTab, setActiveTab] = useState<'profile' | 'preferences' | 'api' | 'usage'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'preferences' | 'api' | 'usage' | 'email'>('profile');
   const [isLoading, setIsLoading] = useState(false);
   const [hasApiKey, setHasApiKey] = useState(false);
 
@@ -84,6 +85,7 @@ export function Settings({ onBack }: SettingsProps) {
     { id: 'profile' as const, label: 'Profile', icon: '👤' },
     { id: 'preferences' as const, label: 'Preferences', icon: '⚙️' },
     { id: 'api' as const, label: 'API Keys', icon: '🔑' },
+    { id: 'email' as const, label: 'Email', icon: '📧' },
     { id: 'usage' as const, label: 'Usage', icon: '📊' },
   ];
 
@@ -399,6 +401,7 @@ export function Settings({ onBack }: SettingsProps) {
               {activeTab === 'profile' && renderProfileTab()}
               {activeTab === 'preferences' && renderPreferencesTab()}
               {activeTab === 'api' && renderApiTab()}
+              {activeTab === 'email' && <EmailSettings />}
               {activeTab === 'usage' && renderUsageTab()}
             </GlassCard>
           </div>

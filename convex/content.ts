@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 
 // Save generated content to user's library
 export const saveGeneratedContent = mutation({
@@ -64,6 +65,18 @@ export const saveGeneratedContent = mutation({
         },
         updatedAt: now,
       });
+
+      // Send email notification if user has email and notifications enabled
+      if (user.email && !user.isAnonymous) {
+        // Schedule email notification (fire and forget)
+        ctx.scheduler.runAfter(0, internal.emails.sendContentGenerationNotification, {
+          userEmail: user.email,
+          userName: user.name || "PolicyFrame User",
+          contentType: args.type,
+          topic: args.topic,
+          contentId: contentId,
+        });
+      }
     }
 
     return contentId;
@@ -234,5 +247,46 @@ export const searchContent = query({
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
       }));
+  },
+});
+
+// Share content via email
+export const shareContent = mutation({
+  args: {
+    contentId: v.id("generatedContent"),
+    toEmail: v.string(),
+    message: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    // Get the content to share
+    const content = await ctx.db.get(args.contentId);
+    if (!content || content.userId !== userId) {
+      throw new Error("Content not found or access denied");
+    }
+
+    // Get user info
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Schedule email sharing (fire and forget)
+    ctx.scheduler.runAfter(0, internal.emails.sendContentShare, {
+      fromEmail: user.email || "noreply@policyframe.ai",
+      fromName: user.name || "PolicyFrame User",
+      toEmail: args.toEmail,
+      contentType: content.type,
+      topic: content.topic,
+      contentPreview: content.content,
+      contentId: content._id,
+      message: args.message,
+    });
+
+    return true;
   },
 });
