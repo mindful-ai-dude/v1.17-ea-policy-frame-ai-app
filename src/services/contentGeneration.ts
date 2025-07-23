@@ -11,7 +11,7 @@ export interface GenerationRequest {
   contentType: ContentType;
   model: GeminiModel;
   apiKey: string;
-  searchResults?: { title: string; link: string; content: string; score: number }[];
+  searchResults?: { title: string; link: string; content: string; raw_content?: string; score: number }[];
 }
 
 export interface GenerationProgress {
@@ -246,13 +246,28 @@ SOCIAL MEDIA CALENDAR STRUCTURE (One Month):
 
     let searchContext = '';
     if (request.searchResults && request.searchResults.length > 0) {
-      searchContext = "\n\n### Up-to-date Information from Web Search\n" +
-                      "Use the following real-time search results to provide current and accurate information for the year 2025. Prioritize these sources for any facts, figures, or recent events. Synthesize the information from these sources in your response.\n";
+      searchContext = "\n\n### CURRENT INFORMATION FROM WEB SEARCH (2025)\n" +
+                      "Use the following real-time search results to provide current and accurate information. These sources contain the most up-to-date information available. You MUST cite these sources properly in your response.\n\n";
+      
       request.searchResults.forEach((result, index) => {
-        searchContext += `\n[Source ${index + 1}: ${result.title}]\n` +
-                         `Link: ${result.link}\n` +
-                         `Content: ${result.content}\n`;
+        // Use raw_content if available and longer, otherwise fall back to content
+        const contentToUse = (result.raw_content && result.raw_content.length > result.content.length) 
+          ? result.raw_content 
+          : result.content;
+        
+        searchContext += `**SOURCE ${index + 1}:**\n` +
+                         `Title: ${result.title}\n` +
+                         `URL: ${result.link}\n` +
+                         `Relevance Score: ${result.score}\n` +
+                         `Content: ${contentToUse}\n` +
+                         `${"=".repeat(80)}\n\n`;
       });
+      
+      searchContext += "**CITATION REQUIREMENTS:**\n" +
+                       "1. When referencing information from these sources, use inline citations like: [Source Title](URL)\n" +
+                       "2. Include a comprehensive 'Sources' section at the end with all referenced links\n" +
+                       "3. Prioritize information from higher-scoring sources\n" +
+                       "4. Use specific facts, dates, and quotes from the source content\n\n";
     }
 
     return `You are an expert policy communication strategist specializing in George Lakoff's cognitive framing methodology. Create compelling, strategically framed content that advances AI policy advocacy.
@@ -277,6 +292,13 @@ INSTRUCTIONS:
 6.  Use compelling storytelling and narrative techniques.
 7.  Ensure content is accessible to both experts and general audiences.
 8.  **Create accurate citations in your response based *only* on the provided search result sources.**
+
+CRITICAL CITATION REQUIREMENTS:
+- You MUST include inline citations for all facts, statistics, and claims using the format [Source Title](URL)
+- You MUST include a comprehensive "Sources" section at the end listing all referenced sources
+- Use specific information from the search results, not generic statements
+- Prioritize higher-scoring sources for key information
+- Include direct quotes where appropriate with proper attribution
 
 Generate the content now:`;
   }

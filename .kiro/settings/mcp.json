@@ -19,7 +19,10 @@
       ],
       "env": {},
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [
+        "run",
+        "run"
+      ]
     },
     "tavily-mcp": {
       "command": "npx",
@@ -31,7 +34,9 @@
         "TAVILY_API_KEY": "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"
       },
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [
+        "tavily-search"
+      ]
     },
     "neo4J": {
       "command": "uvx",

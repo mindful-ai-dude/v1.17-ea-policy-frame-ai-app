@@ -7,6 +7,7 @@ interface SearchResult {
   title: string;
   link: string;
   content: string; // Tavily provides full content, not just a snippet
+  raw_content?: string; // Full raw content for better citations
   score: number;
 }
 
@@ -31,6 +32,8 @@ export const performTavilySearch = action({
         query: query,
         search_depth: "advanced", // Use "advanced" for more thorough results
         include_answer: false, // We just want the search results, not a summarized answer
+        include_raw_content: true, // Include full raw content for better citations
+        include_images: false, // Don't include images to reduce response size
         max_results: 5, // Get the top 5 results
       }),
     });
@@ -49,10 +52,11 @@ export const performTavilySearch = action({
 
     // Map the Tavily results to our consistent SearchResult interface
     return data.results.map((item: any): SearchResult => ({
-      title: item.title,
-      link: item.url, // Note: Tavily uses 'url' instead of 'link'
-      content: item.content,
-      score: item.score,
+      title: item.title || "Untitled",
+      link: item.url || "", // Note: Tavily uses 'url' instead of 'link'
+      content: item.content || "",
+      raw_content: item.raw_content || item.content || "", // Include raw content for better citations, fallback to content
+      score: item.score || 0,
     }));
   },
 });
